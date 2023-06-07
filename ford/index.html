@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.2/lib/index.css">
+    <script src="https://cdn.suoluomei.com/common/js2.0/vue/v2.5.16/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vant@2.2/lib/vant.min.js"></script>
+
+    <script src="https://sucai.suoluomei.cn/sucai_zs/file/20191217145416-area.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.zwlearn.com/Ford/animate.css">
+    <link rel="stylesheet" href="https://cdn.zwlearn.com/Ford/tips.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vant@2.12/lib/index.css" />
+    <script src="https://cdn.zwlearn.com/Ford/tips.js"></script>
+
+
+</head>
+
+<style>
+    #van-popup van-popup--bottom {
+        height: 35%;
+    }
+
+    #van-cell__value van-cell__value--alone {
+        font-size: large;
+    }
+</style>
+
+<body>
+    <div id="Vue">
+        <div id="background">
+            <img src="https://cdn.zwlearn.com/Ford/bg3.png" style="position:absolute; width: 100%; height: auto" alt="">
+            <img src="https://cdn.zwlearn.com/Ford/title1.png" alt=""
+                style="position: absolute;top: 85vw;left: 6vw;width: 90vw;">
+            <img src="https://cdn.zwlearn.com/Ford/name1.png" alt=""
+                style="position: absolute;top: 100vw;left: 10vw;width: 15vw">
+            <img src="https://cdn.zwlearn.com/Ford/tel1.png" alt=""
+                style="position:absolute;left: 9vw;width: 15vw;top: 117vw;height: 4.5vw;width: 16vw">
+            <img src="https://cdn.zwlearn.com/Ford/city1.png" alt=""
+                style="position:absolute;left: 10vw;width: 62vw;top: 134vw;height: 12vw">
+            <img src="https://cdn.zwlearn.com/Ford/button2.png" alt=""
+                style="position:absolute;top: 175vw;width: 49vw;height: 9vw;left: 25vw">
+            <img src="https://cdn.zwlearn.com/Ford/button_2-2.png" alt=""
+                style="position: absolute;width: 20vw;height: 4.3vw;top: 151vw;left: 10vw">
+            <img src="https://cdn.zwlearn.com/Ford/bottom.png" alt=""
+                style="position: absolute;width: 94vw;top: 185vw;left: 0vw">
+
+        </div>
+        <input type="text" id="name" name="name" v-model="name" placeholder="请输入"
+            style="font-size: 4vw;top: 105vw;height: 8vw; width: 80vw;left: 9vw;position:absolute;border: 0 solid;background-color: rgb(255,251,249)">
+        <div style="position: absolute;top: 112vw;left: 10vw;width: 80vw;height: 0vw;border: 1px solid #b2b2b2"></div>
+        <input type="text" id="mobile" name="mobile" v-model="mobile" placeholder="请输入" maxlength="11"
+            style="font-size: 4vw;top: 122vw; width: 80vw;height:9vw;left: 9vw;position:absolute;border: 0 solid;background-color: rgb(255,251,249)">
+        <div style="position: absolute;top: 130vw;left: 10vw;width: 80vw;height: 0vw;border: 1px solid #b2b2b2"></div>
+        <div style="position: absolute;top: 147.5vw;left: 10vw;width: 80vw;height: 0vw;border: 1px solid #b2b2b2"></div>
+        <van-button @click="toSelect"
+            style="height: 9vw;top: 138.5vw; width: 70vw;left: 11vw;position:absolute;border: 0 solid;background-color: rgb(255,251,249)">
+            <span id="msg"
+                style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;position:absolute; width: 70vw;font-size:4vw;left: -1vw;top: 3vw;text-align: left;color: #b2b2b2">请选择省市</span>
+        </van-button>
+        <van-popup v-model="show" position="bottom">
+            <van-area v-model="city" @cancel="cancelFn" :area-list="areaList" @confirm="confirmFn" :columns-num="2"
+                style="height: 30%; " :columns-placeholder="['请选择', '请选择', '请选择']" title="选择所在省市">
+            </van-area>
+        </van-popup>
+
+        <span id="msg1"
+            style="position:absolute;top: 158.5vw;font-size: 4vw;left: 10vw;color: rgb(178,178,178);white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">请选择经销商</span>
+        <van-cell is-link @click="showPopup" style="position:absolute;top: 156vw;width: 80vw;left: 10vw;opacity: 0">
+        </van-cell>
+        <van-popup v-model="show1" position="bottom">
+
+            <van-picker title="选择经销商" show-toolbar :columns="dealerName" @confirm="onConfirm" @cancel="onCancel">
+
+            </van-picker>
+        </van-popup>
+
+
+        <div style="position: absolute;top: 164vw;left: 10vw;width: 80vw;height: 0vw;border: 1px solid #b2b2b2"></div>
+        <el-button @click="submit" style="position:relative;top: 175vw;height: 10vw;width: 50vw;left: 25vw;opacity: 0">
+        </el-button>
+    </div>
+</body>
+<script>
+    // function nameblur(){
+    //     let reg = /^[\u4E00-\u9FA5]{2,10}(·[\u4E00-\u9FA5]{2,10}){0,2}$/;
+    //     if(reg.test($('name'))===false||$('name')===""){
+    //         document.getElementById('name').style.border="1px solid red"
+    //     }
+    // }
+    //
+    // function namefocus(){
+    //     document.getElementById('name').style.border="1px soild white"
+    // }
+    // function mobileblur(){
+    //     let reg =/^1(3\d|4[5-8]|5[0-35-9]|6[567]|7[01345-8]|8\d|9[025-9])\d{8}$/;
+    //     if(reg.test($('name'))===false){
+    //         document.getElementById('name').style.border="1px solid red"
+    //     }
+    // }
+    //
+    // function mobilef(){
+    //
+    // }
+
+    new Vue({
+        el: "#Vue",
+        data: {
+            show: false,
+            areaList: are,
+            name: "",
+            mobile: "",
+            city: "",
+            province: "",
+            provinceCode: "",
+            cityCode: "",
+            show1: false,
+            dealerName: "",
+            dealerCode: "",
+            cachedealerName: "",
+            cachedealerCode: ""
+        },
+        mounted() {
+        },
+        methods: {
+            onConfirm(value, index) {
+                this.show1 = false
+                this.cachedealerName = value
+                this.cachedealerCode = this.dealerCode[index]
+                console.log(this.cachedealerCode)
+                document.getElementById("msg1").innerHTML = value
+                document.getElementById("msg1").style.color = ""
+            },
+            onCancel() {
+                this.show1 = false;
+                document.getElementById("msg1").innerHTML = "请选择经销商"
+                document.getElementById("msg1").style.color = "#b2b2b2"
+                axios({
+                    method: 'GET',
+                    url: 'https://rw.velo.com.cn/caft/api/dealer/fetch',
+                    params: {
+                        code: this.cityCode
+                    }
+                }).then(res => {
+                    let data = res.data.data
+                    dealername = [];
+                    dealercode = [];
+                    if (data.length > 0) {
+                        for (let item of data) {
+                            dealername.push(item.fullname);
+                        }
+                    }
+                    if (data.length > 0) {
+                        for (let item of data) {
+                            dealercode.push(item.code)
+                        }
+                    }
+                    console.log(dealername)
+                    console.log(dealercode)
+                    this.dealerName = dealername
+                    this.dealerCode = dealercode
+                    this.cachedealerCode = ""
+                    this.cachedealerName = ""
+
+                })
+            }
+            ,
+            showPopup() {
+                if (this.cityCode === "") {
+                    this.show1 = false
+                    tip3s("请先选择城市")
+                } else {
+                    this.show1 = true
+                }
+            }
+            ,
+            toSelect() {
+                this.show = true;
+            },
+            confirmFn(value) {
+                let text = ""
+                if (value[0].code !== '') {
+                    this.province = value[0].name
+                    this.provinceCode = value[0].code
+                    this.convertHtml(text)
+                    if (value[1].code !== '') {
+                        this.province = value[0].name
+                        this.provinceCode = value[0].code
+                        this.city = value[1].name
+                        this.cityCode = value[1].code
+                        this.show = false
+                        let a = value[0].name
+                        let b = value[1].name
+                        let d = a.concat("/", b)
+                        this.convertHtml(d)
+                        document.getElementById('msg1').innerHTML = "请选择经销商"
+                        document.getElementById("msg1").style.color = "#b2b2b2"
+                        axios({
+                            method: 'GET',
+                            url: 'https://rw.velo.com.cn/caft/api/dealer/fetch',
+                            params: {
+                                code: this.cityCode
+                            }
+                        }).then(res => {
+                            let data = res.data.data
+                            dealername = [];
+                            dealercode = [];
+                            if (data.length > 0) {
+                                for (let item of data) {
+                                    dealername.push(item.fullname);
+                                }
+                            }
+                            if (data.length > 0) {
+                                for (let item of data) {
+                                    dealercode.push(item.code)
+                                }
+                            }
+                            console.log(dealername)
+                            console.log(dealercode)
+                            this.dealerName = dealername
+                            this.dealerCode = dealercode
+                            this.cachedealerCode = ""
+                            this.cachedealerName = ""
+                        })
+                    } else {
+                        tip3s("请选择城市")
+                        return;
+                    }
+                } else {
+                    tip3s("请选择省份")
+                    return
+                }
+                // this.show = false;
+                // this.province = value[0].name
+                // this.city = value[1].name
+                // this.district = value[2].name
+                // this.provinceCode = value[0].code
+                // this.cityCode = value[1].code
+                // this.districtCode = value[2].code
+                // console.log(value)
+            },
+            cancelFn() {
+                this.show = false;
+                document.getElementById("msg").innerHTML = "请选择省市"
+                document.getElementById("msg").style.color = "#b2b2b2"
+                this.province = ""
+                this.provinceCode = ""
+                this.city = ""
+                this.cityCode = ""
+                this.dealerCode = ""
+                this.dealerName = ""
+                this.cachedealerCode=""
+                this.cachedealerName=""
+                document.getElementById("msg1").innerHTML = "请选择经销商"
+                document.getElementById("msg1").style.color = "#b2b2b2"
+            },
+            convertHtml(a) {
+                document.getElementById("msg").innerHTML = a
+                document.getElementById("msg").style.color = ""
+            },
+            submit() {
+                if (this.mobile === "" && this.name === "" && this.dealerName === "") {
+                    this.open7()
+                } else {
+                    if (this.cachedealerName instanceof Array === true || this.cachedealerName === "") {
+                        this.open8()
+                    } else if (this.mobile === "") {
+                        this.open6()
+                    } else {
+                        axios({
+                            method: 'POST',
+                            url: 'https://rw.velo.com.cn/caft/api/member',
+                            data: {
+                                name: this.name,
+                                mobile: this.mobile,
+                                province: this.province,
+                                city: this.city,
+                                provinceCode: this.provinceCode,
+                                cityCode: this.cityCode,
+                                dealerName: this.cachedealerName,
+                                dealerCode: this.cachedealerCode,
+                            }
+                        }).then(res => {
+                            if (res.data.msg === "请选择购车城市") {
+                                this.open5()
+                                document.getElementById("msg").innerHTML = "请选择省市"
+                                document.getElementById("msg").style.color = "#b2b2b2"
+                            } else {
+                                if (res.data.msg === "请输入姓名") {
+                                    this.open3()
+                                } else {
+                                    if (res.data.msg === "请输入正确的手机号") {
+                                        this.open4()
+                                    } else {
+                                        if (res.data.msg === "已存在该手机号码") {
+                                            this.open2()
+                                        } else {
+                                            if (res.data.msg === "请选择经销商") {
+                                                tip3s('请选择经销商')
+                                            } else {
+                                                if (res.data.code === 0) {
+                                                    this.open1()
+                                                    console.log(res)
+                                                    this.name = ""
+                                                    this.mobile = ""
+                                                    this.province = ""
+                                                    this.city = ""
+                                                    this.provinceCode = ""
+                                                    this.cityCode = ""
+                                                    this.dealerName = ""
+                                                    this.dealerCode = ""
+                                                    this.cachedealerCode = ""
+                                                    this.cachedealerName = ""
+                                                    document.getElementById("msg").innerHTML = "请选择省市"
+                                                    document.getElementById("msg").style.color = "#b2b2b2"
+                                                    document.getElementById("msg1").innerHTML = "请选择经销商"
+                                                    document.getElementById("msg1").style.color = "#b2b2b2"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+
+
+
+
+
+
+
+                        })
+                    }
+                }
+
+
+            },
+            open1() {
+                tip3s('您已成功提交信息')
+            },
+            open2() {
+                tip3s('已存在该手机号码');
+            },
+            open3() {
+                tip3s('请输入姓名');
+            },
+            open4() {
+                tip3s('请输入正确的手机号')
+            },
+            open5() {
+                tip3s('请选择购车城市')
+            },
+            open6() {
+                tip3s('请输入手机号')
+            },
+            open7() {
+                tip3s('请输入信息')
+            },
+            open8() {
+                tip3s('请选择经销商')
+            }
+        },
+
+    })
+</script>
+
+</html>
